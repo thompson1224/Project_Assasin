@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class ParkourController : MonoBehaviour
@@ -8,16 +9,18 @@ public class ParkourController : MonoBehaviour
     private bool playerInAction;
     public Animator animator;
     public PlayerScript playerScript;
-
+    [SerializeField] private JumpAction jumpDownParkourAction;
+    private float autoJumpHeightLimit = 2f;
+    
     [Header("Jump Action Area")] 
     public List<JumpAction> newJumpActions;
 
     private void Update()
     {
+        var hitData = environmentChecker.CheckObstacle();
+
         if (Input.GetButton("Jump") && !playerInAction)
         {
-            var hitData = environmentChecker.CheckObstacle();
-
             if (hitData.hitFound)
             {
                 foreach (var action in newJumpActions)
@@ -28,6 +31,21 @@ public class ParkourController : MonoBehaviour
                         break;
                     }
                 }
+            }
+        }
+
+        // if player is on a ledge and is not in action and there is no obstacle in front of him
+        if (playerScript.playerOnLedge && !playerInAction && !hitData.hitFound)
+        {
+            bool canJump = true;
+            
+            if (playerScript.LedgeInfo.height > autoJumpHeightLimit && !Input.GetButton("Jump"))
+                canJump = false;
+                
+            if (canJump && playerScript.LedgeInfo.angle <= 90)
+            {
+                playerScript.playerOnLedge = false;
+                StartCoroutine(PerformParkourAction(jumpDownParkourAction));
             }
         }
     }
@@ -50,18 +68,26 @@ public class ParkourController : MonoBehaviour
         {
             timerCounter += Time.deltaTime;
 
-            // 장애물을 바라보게 변경
+            // 캐릭터가 장애물을 바라보게 변경
             if (action.LookAtObstacle)
             {
-                Quaternion.RotateTowards(transform.rotation, action.RequiredRotation, playerScript.rotSpeed * Time.deltaTime);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, action.RequiredRotation, playerScript.rotSpeed * Time.deltaTime);
             }
 
             if (action.AllowTargetMathcing)
             {
                 CompareTarget(action);
             }
+
+            if (animator.IsInTransition(0) && timerCounter >= 0.5f)
+            {
+                break;
+            }
+            
             yield return null;
         }
+
+        yield return new WaitForSeconds(action.ParkourActionDelay);
         
         playerScript.SetControl(true);
         playerInAction = false;
@@ -70,6 +96,6 @@ public class ParkourController : MonoBehaviour
     void CompareTarget(JumpAction action)
     {
         animator.MatchTarget(action.ComparePostion, transform.rotation, action.CompareBodyPart,
-            new MatchTargetWeightMask(new Vector3(0, 1, 0), 0), action.CompareStartTime, action.CompareEndTime);
+            new MatchTargetWeightMask(action.ComparePositionWeight, 0), action.CompareStartTime, action.CompareEndTime);
     }
 }

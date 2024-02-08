@@ -115,6 +115,7 @@
 -define:ENABLE_TIMELINE
 -define:ENABLE_LEGACY_INPUT_MANAGER
 -define:TEXTCORE_FONT_ENGINE_1_5_OR_NEWER
+-define:UNITY_POST_PROCESSING_STACK_V2
 -define:CSHARP_7_OR_LATER
 -define:CSHARP_7_3_OR_NEWER
 -r:"C:/Program Files/Unity/Hub/Editor/2021.3.26f1/Editor/Data/Managed/UnityEngine/UnityEditor.CoreModule.dll"
@@ -328,6 +329,8 @@
 -r:"Library/Bee/artifacts/1900b0aEDbg.dag/Unity.EditorCoroutines.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aEDbg.dag/Unity.Performance.Profile-Analyzer.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aEDbg.dag/Unity.PlasticSCM.Editor.ref.dll"
+-r:"Library/Bee/artifacts/1900b0aEDbg.dag/Unity.Postprocessing.Editor.ref.dll"
+-r:"Library/Bee/artifacts/1900b0aEDbg.dag/Unity.Postprocessing.Runtime.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aEDbg.dag/Unity.Rider.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aEDbg.dag/Unity.TestTools.CodeCoverage.Editor.OpenCover.Model.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aEDbg.dag/Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.ref.dll"
@@ -349,10 +352,26 @@
 -r:"Library/Bee/artifacts/1900b0aEDbg.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aEDbg.dag/UnityEngine.UI.ref.dll"
 "Assets/Scripts/CameraControllerScripts/MainCameraController.cs"
+"Assets/Scripts/Knight/KnightAI.cs"
+"Assets/Scripts/Parkour/ControllFallingMovement.cs"
 "Assets/Scripts/Parkour/EnvironmentChecker.cs"
 "Assets/Scripts/Parkour/JumpAction.cs"
 "Assets/Scripts/Parkour/ParkourController.cs"
+"Assets/Scripts/PlayerController/Object.cs"
 "Assets/Scripts/PlayerController/PlayerScript.cs"
+"Assets/Scripts/Rifles/Bazooka.cs"
+"Assets/Scripts/Rifles/FistFight.cs"
+"Assets/Scripts/Rifles/Grenade.cs"
+"Assets/Scripts/Rifles/GrenadeThrower.cs"
+"Assets/Scripts/Rifles/Rifle.cs"
+"Assets/Scripts/Rifles/SingleMeleeAttack.cs"
+"Assets/UnityTechnologies/ParticlePack/EffectExamples/Misc Effects/Scripts/SpawnEffect.cs"
+"Assets/UnityTechnologies/ParticlePack/Shared/Ramps/Runtime/RampAsset.cs"
+"Assets/UnityTechnologies/ParticlePack/Shared/Scripts/AdjustTimeScale.cs"
+"Assets/UnityTechnologies/ParticlePack/Shared/Scripts/ProximityActivate.cs"
+"Assets/UnityTechnologies/ParticlePack/Shared/Scripts/SimpleCameraController.cs"
+"Assets/UnityTechnologies/ParticlePack/Shared/Scripts/SimpleCharacterMotor.cs"
+"Assets/UnityTechnologies/ParticlePack/TutorialInfo/Scripts/Readme.cs"
 -langversion:9.0
 
 /deterministic

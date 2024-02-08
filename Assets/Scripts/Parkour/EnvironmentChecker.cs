@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using UnityEngine;
 
 public class EnvironmentChecker : MonoBehaviour
@@ -8,6 +9,12 @@ public class EnvironmentChecker : MonoBehaviour
     public float rayLength = 0.9f;
     public LayerMask obstacleLayer;
     public float heightRayLength = 6f;
+
+    [Header("Check Ledges")] 
+    [SerializeField] private float ledgeRayLength = 11f;
+
+    [SerializeField] private float ledgeRayHeightThreshold = 0.76f;
+    
     
 
     public ObstacleInfo CheckObstacle()
@@ -32,6 +39,44 @@ public class EnvironmentChecker : MonoBehaviour
 
         return hitData;
     }
+
+    public bool CheckLedge(Vector3 movementDirection, out LedgeInfo ledgeInfo)
+    {
+        ledgeInfo  = new LedgeInfo();
+        if (movementDirection == Vector3.zero)
+        {
+            return false;
+        }
+
+        float ledgeOriginOffset = 0.5f;
+        var ledgeOrigin = transform.position + movementDirection * ledgeOriginOffset + Vector3.up;
+
+        if (Physics.Raycast(ledgeOrigin, Vector3.down, out RaycastHit hit, ledgeRayLength, obstacleLayer))
+        {
+            Debug.DrawRay(ledgeOrigin, Vector3.down * ledgeRayLength, Color.blue);
+
+            // Check if the ledge is high enough
+            var surfaceRaycastOrigin = transform.position + movementDirection - new Vector3(0, 0.1f, 0);
+
+            // Check if the surface is a ledge
+            if (Physics.Raycast(surfaceRaycastOrigin, -movementDirection, out RaycastHit surfaceHit, 2, obstacleLayer))
+            {
+                float ledgeHeight = transform.position.y - hit.point.y;
+
+                // Check if the ledge is high enough
+                if (ledgeHeight > ledgeRayHeightThreshold)
+                {
+                    // Check if the surface is a ledge
+                    ledgeInfo.angle = Vector3.Angle(transform.forward, surfaceHit.normal);
+                    ledgeInfo.height = ledgeHeight;
+                    ledgeInfo.surfaceHit = surfaceHit;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }
 public struct ObstacleInfo
 {
@@ -39,4 +84,11 @@ public struct ObstacleInfo
     public bool heightHitFound;
     public RaycastHit hitInfo;
     public RaycastHit heightInfo;
+}
+
+public struct LedgeInfo
+{
+    public float angle;
+    public float height;
+    public RaycastHit surfaceHit;
 }
